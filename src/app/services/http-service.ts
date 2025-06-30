@@ -14,27 +14,39 @@ export class HttpService {
     let message = 'خطایی رخ داده است.';
     if (error.status === 0) {
       message = 'ارتباط با سرور برقرار نشد.';
-    } else if (error.status === 404) {
-      message = 'یافت نشد.';
+    } else if (error.status === 401) {
+      message = 'شما لاگین نشده اید';
     } else if (error.status === 500) {
       message = 'خطای داخلی سرور.';
     }
     return throwError(() => new Error(message));
   }
 
+  private creatHeaders(headers?: HttpHeaders): HttpHeaders {
+    const token = localStorage.getItem('token');
+    let result = headers ?? new HttpHeaders({'Content-Type': 'application/json'} );
+    if (token) {
+      result = result.set('Authorization', `Bearer ${token}`);
+    }
+    return result;
+  }
+
+
     get<T>(url: string, headers?: HttpHeaders): Observable<T> {
-    return this.http.get<T>(url, { headers }).pipe(catchError(this.handleError));
+    return this.http.get<T>(url, { headers :  this.creatHeaders(headers)}).pipe(catchError(this.handleError));
   }
 
   post<T>(url: string, body: any, headers?: HttpHeaders): Observable<T> {
-    return this.http.post<T>(url, body, { headers }).pipe(catchError(this.handleError));
+    return this.http.post<T>(url, body, { headers :  this.creatHeaders(headers)}).pipe(catchError(this.handleError));
   }
 
   put<T>(url: string, body: any, headers?: HttpHeaders): Observable<T> {
-    return this.http.put<T>(url, body, { headers }).pipe(catchError(this.handleError));
+    return this.http.put<T>(url, body, { headers :  this.creatHeaders(headers)}).pipe(catchError(this.handleError));
   }
 
   delete<T>(url: string, headers?: HttpHeaders): Observable<T> {
-    return this.http.delete<T>(url, { headers }).pipe(catchError(this.handleError));
+    return this.http.delete<T>(url, { headers :  this.creatHeaders(headers)}).pipe(catchError(this.handleError));
   }
+
+
 }

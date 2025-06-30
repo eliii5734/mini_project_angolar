@@ -1,0 +1,18 @@
+<div class="container h-100 ">
+  <div class="row h-100">
+    <div class="col-6 mx-auto text-center d-flex justify-content-center align-items-center">
+      <form style="max-width: 18rem;" class="text-start w-100">
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">User Name</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" #inputName>
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label">Password</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" #inputPassword>
+        </div>
+        <button type="submit" class="btn btn-primary" (click)="checkLoginUser(inputName.value , inputPassword.value)">Submit</button>
+      </form>
+    </div>
+  </div>
+
+</div>
