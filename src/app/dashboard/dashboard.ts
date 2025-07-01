@@ -1,12 +1,22 @@
 import { Component } from '@angular/core';
-import {DataService} from '../services/shered-data-http';
+import { DataService } from '../services/shered-data-http';
 import { HttpService } from '../services/http-service';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { catchError, map, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { User } from '../models/user.model';
+import { throwError } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
+import { of } from 'rxjs';
+
+
+
 
 
 @Component({
   selector: 'dashboard',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
@@ -14,29 +24,46 @@ export class Dashboard {
   constructor(
     private dataService: DataService,
     private httpService: HttpService,
-    private httpHeaders: HttpHeaders
-  ) {}
+    private cd: ChangeDetectorRef
+  ) { }
+
+  isloading: boolean = true;
+
+    list=[{
+    id: 1,
+  }]
+
   ngOnInit() {
-  this.getDatafromServer();
-  }
-
-  myUsers: any[] = [];
-
-  private getDatafromServer() {
-    let token= localStorage.getItem('token') || "";
+    let token = localStorage.getItem('token') || "";
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    this.httpService.get("http://192.168.180.181:9000/users" , {headers}).subscribe({
-      next: (data) => {
-        this.validationUser(data);
-      },
-      error: (err) => {
-        alert(`Error: ${err.message}`);
-      }
+    this.httpService.get<User>("http://192.168.180.181:9000/users", headers).pipe(
+      map(data => {
+        return data;
+      }),
+      catchError(err => {
+        this.isloading=false;
+          this.cd.detectChanges();
+
+        console.error('خطا در دریافت اطلاعات:', err);
+        return throwError(() => err);
+
+      })
+    ).subscribe(result => {
+      this.isloading=false;
+        this.cd.detectChanges();
+      this.validationUser(result);
+
     });
   }
 
+
+
+
+  myUsers$!: Observable<User[]>
+
   private validationUser(data: any) {
-    this.myUsers = data.result.data.items;
-    console.log(this.myUsers);
+    this.myUsers$= of(data.result.data.items);
+    console.log(this.myUsers$)
+    this.cd.detectChanges();
   }
 }

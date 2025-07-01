@@ -38,25 +38,4 @@ export class Login {
     }
   }
 
-// ngOnInit() {
-
-// }
-
-  // showModal: boolean = false;
-
-  // ngOnInit() {
-  //   this.showModal = true;
-  //   console.log("first")
-  // }
-  // closeModal() {
-  //   this.showModal = false;
-  // }
-
-  // showModalLogin() {
-  //   if (!this.showModal) {
-  //     this.showModal = true;
-  //     const myModal = new bootstrap.Modal(document.getElementById('loginModal'));
-  //   myModal.show();
-  //   }
-  // }
 }

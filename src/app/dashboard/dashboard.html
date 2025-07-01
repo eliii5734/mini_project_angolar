@@ -1,7 +1,24 @@
-<div class="card text-bg-success mb-3" style="max-width: 18rem;">
-  <div class="card-header">Header</div>
-  <div class="card-body">
-    <h5 class="card-title">Success card title</h5>
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
+<div class="d-flex justify-content-center align-items-center vh-100" *ngIf="isloading">
+  <span class="loader"></span>
+</div>
+
+<div class="container my-5" *ngIf="!isloading">
+  <div class="row">
+    <div>
+      <div class="card text-bg-success mb-3" style="max-width: 18rem;"   *ngFor="let user of myUsers$ |async" >
+      <div class="card-header">
+        <p class="text-start">{{user.f_name}} {{user.l_name}}</p>
+        <div>
+          <i class="search"></i>
+          <i class="material-icons">search</i>
+        </div>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">Success card title</h5>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s
+          content.</p>
+      </div>
+    </div>
+    </div>
   </div>
 </div>
