@@ -45,13 +45,16 @@ export class HttpService {
     return this.http.post<T>(url, body, { headers :  this.creatHeaders(headers)}).pipe(catchError(this.handleError));
   }
 
-  put<T>(url: string, body: any, headers?: HttpHeaders): Observable<T> {
-    return this.http.put<T>(url, body, { headers :  this.creatHeaders(headers)}).pipe(catchError(this.handleError));
-  }
-
   delete<T>(url: string, headers?: HttpHeaders): Observable<T> {
     return this.http.delete<T>(url, { headers :  this.creatHeaders(headers)}).pipe(catchError(this.handleError));
   }
+
+  patch<T>(url: string, body: any, headers?: HttpHeaders): Observable<T> {
+  return this.http.patch<T>(url, body, { headers: this.creatHeaders(headers) }).pipe(
+    catchError(this.handleError)
+  );
+}
+
 
 
 }

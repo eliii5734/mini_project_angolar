@@ -30,3 +30,13 @@
     transform: rotate(360deg);
   }
 }
+
+
+
+p{
+  margin: 0;
+}
+a{
+  text-decoration: none;
+  color: inherit;
+}

@@ -3,20 +3,32 @@
 </div>
 
 <div class="container my-5" *ngIf="!isloading">
+  <div class="my-3">
+    <button class="btn btn-primary" (click)="goToAddUserPage()">اضافه کردن کاربر</button>
+  </div>
   <div class="row">
     <div>
-      <div class="card text-bg-success mb-3" style="max-width: 18rem;"   *ngFor="let user of myUsers$ |async" >
-      <div class="card-header">
+      <div class="card text-bg-success mb-3" style="max-width: 19rem;"   *ngFor="let user of myUsers$ |async" >
+      <div class="card-header d-flex justify-content-between align-items-center">
         <p class="text-start">{{user.f_name}} {{user.l_name}}</p>
-        <div>
-          <i class="search"></i>
-          <i class="material-icons">search</i>
-        </div>
+        <a href="">
+          <i class="material-icons">delete_forever</i>
+        </a>
       </div>
-      <div class="card-body">
-        <h5 class="card-title">Success card title</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s
-          content.</p>
+      <div class="card-body text-end">
+        <p class="text-start">ایمیل کاربر : {{user.email}}</p>
+        <div class="d-flex justify-content-start align-items-center">
+          <p>شماره موبایل : </p>
+          <p> {{user.phone_number}}</p>
+        </div>
+        <div class="d-flex justify-content-start align-items-center">
+          <p>تاریخ تولد : </p>
+          <p> {{user.birth_date}}</p>
+        </div>
+        <div class="d-flex justify-content-start align-items-center">
+          <p>شماره ملی : </p>
+          <p> {{user.national_code}}</p>
+        </div>
       </div>
     </div>
     </div>
