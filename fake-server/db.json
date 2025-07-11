@@ -1,0 +1,26 @@
+{
+  "users": [
+    {
+      "username": "aLi@89",
+      "email": "alikarimi@gmail.com",
+      "f_name": "علی",
+      "l_name": "رضایی",
+      "gender": "male",
+      "phone_number": "09123456789",
+      "national_code": "12345778907",
+      "birth_date": "1404/04/01",
+      "id": 1
+    },
+    {
+      "username": "eL@he1212",
+      "email": "elahenasrollahy@gmail.com",
+      "f_name": "الهه",
+      "l_name": "کریمی",
+      "gender": "female",
+      "phone_number": "09123456789",
+      "national_code": "12345678912",
+      "birth_date": "1404/04/02",
+      "id": 2
+    }
+  ]
+}

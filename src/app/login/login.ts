@@ -20,10 +20,12 @@ export class Login {
 
   checkLoginUser(username: string, password: string) {
     if(username && password) {
-      this.httpService.post('http://192.168.180.181:9000/users/login' ,
+      this.httpService.post('http://localhost:3000/users/login' ,
         { username, password }
       ).subscribe({
-    next: (data) => this.validationUser(data),
+    next: (data) => {
+      this.validationUser(data)
+    },
     error: (err) => alert(err.message)
   });
     }
@@ -33,7 +35,7 @@ export class Login {
     if(data.hasError){
       alert(data.messages[0]);
     }else{
-      localStorage.setItem('token', data.result.token);
+      localStorage.setItem('token', data.token);
       this.router.navigate(['/dashboard']);
     }
   }

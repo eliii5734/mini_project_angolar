@@ -40,12 +40,11 @@ export class Dashboard {
 
 
   private sendDataToDOM(data: any) {
-    this.myUsers$ = of(data.result.data.items);
-    console.log(this.myUsers$)
+    this.myUsers$ = of(data);
     this.cd.detectChanges();
   }
   private getData(headers: any) {
-    this.httpService.get<User>("http://192.168.180.181:9000/users", headers).pipe(
+    this.httpService.get<User>("http://localhost:3000/users", headers).pipe(
       map(data => {
         return data;
       }),
@@ -64,7 +63,30 @@ export class Dashboard {
 
     });
   }
-  goToAddUserPage(){
+  goToAddUserPage() {
     this.router.navigate(['/addUser']);
   }
+
+  deleteUser(id: number) {
+    this.httpService.delete(`http://localhost:3000/users/${id}`)
+      .subscribe({
+        error: (error) => {
+          alert(`خطا در حذف:${error}` );
+        },
+        complete: () => {
+          alert('عملیات حذف کامل شد.');
+          this.ngOnInit()
+        }
+      });
+
+  }
+
+  editUser(id : number){
+    this.myUsers$.subscribe(data =>{
+      const userToEdit = data.find(user => user.id === id);
+      this.dataService.sendData(userToEdit)
+    })
+    this.goToAddUserPage()
+  }
+
 }

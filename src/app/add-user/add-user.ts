@@ -7,6 +7,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { HttpService } from '../services/http-service';
 import { HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { DataService } from '../services/shered-data-http';
 
 
 
@@ -18,14 +19,15 @@ import { Router } from '@angular/router';
 })
 export class AddUser implements AfterViewInit {
   clicked: boolean = false;
-  newUser:object={};
+  newUser: object = {};
   isloading: boolean = false;
   constructor(
     private cd: ChangeDetectorRef,
     private httpService: HttpService,
-    private router: Router
+    private router: Router,
+    private dataService: DataService
 
-   ) { }
+  ) { }
 
   registerForm = new FormGroup({
     username: new FormControl('', [
@@ -60,32 +62,39 @@ export class AddUser implements AfterViewInit {
       Validators.pattern('^\\d{11}$')
     ]),
     birth_date: new FormControl(null, Validators.required),
-    date_employed: new FormControl(null, Validators.required)
   });
+  myUsers: any;
+  editingUser: boolean = false
+
+  ngOnInit() {
+    this.dataService.data$.subscribe(data => {
+      if (data) {
+        this.editingUser = true;
+        this.myUsers = data;
+        console.log(data, this.myUsers);
+        this.registerForm.patchValue(this.myUsers);
+      } else {
+        this.editingUser = false;
+      }
+    })
+  }
 
   onSubmit() {
     this.clicked = true;
     this.cd.detectChanges();
     if (this.registerForm.valid) {
-      this.newUser={
-        ...this.registerForm.value,
-        internal_number: '3101010',
-        internal_number_type: 1,
-        webrtc_username: '',
-        webrtc_password: '',
-        role_name: 'user',
-        enable: true
+      this.newUser = {
+        ...this.registerForm.value
       }
       console.log(this.newUser);
-      this.addNewUser();
+      this.addNewUser(this.myUsers.id);
     } else {
-      alert(' فرم معتبر نیست !! لطفا تمامی اطلاعات را به درستی وارد کنید.');
+      console.log(' فرم معتبر نیست !! لطفا تمامی اطلاعات را به درستی وارد کنید.', this.registerForm);
     }
   }
 
   ngAfterViewInit(): void {
     this.registerForm.get('birth_date')?.setValue(null);
-    this.registerForm.get('date_employed')?.setValue(null);
   }
 
   shouldShowError(controlName: string): boolean {
@@ -93,22 +102,30 @@ export class AddUser implements AfterViewInit {
     return !!(control && control.invalid && !(control.touched || control.dirty));
   }
 
-   addNewUser() {
+  addNewUser(id : number) {
     this.isloading = true;
     this.cd.detectChanges();
     let token = localStorage.getItem('token') || "";
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    this.httpService.post('http://192.168.180.181:9000/users/create-user' ,
-        this.newUser , headers
+    if (this.editingUser) {
+      this.httpService.put(`http://localhost:3000/users/${id}`,
+        this.newUser, headers
       ).subscribe({
-    next: (data) => this.checkUserAdded(data),
-    error: (err) => alert(err.message)
-  });
+        error: (err) => alert(err.message)
+      });
+    } else {
+      this.httpService.post('http://localhost:3000/users',
+        this.newUser, headers
+      ).subscribe({
+        error: (err) => alert(err.message)
+      });
+    }
+    this.goDashboard()
   }
 
-  private checkUserAdded(data: any) {
-  this.isloading = false;
-  this.cd.detectChanges();
-    console.log(data.result.data.items)
+  private goDashboard() {
+    this.isloading = false;
+    this.cd.detectChanges();
+    this.router.navigate(['/dashboard']);
   }
 }
